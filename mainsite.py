@@ -5,6 +5,7 @@ from flask import Flask, render_template, request
 import requests
 import json
 import random
+from datetime import datetime
 
 
 
@@ -34,8 +35,8 @@ def add_user(user):
     email = user["email"]
     password = user["password"]
 
-    data = {"query": "mutation($user: UserInput!) { createUser(user: $user) { token user { id displayName email username } }",
-    "variables": {"user": {"id": id,"displayName": displayname,"username": username,"password": password,"email": email}}}
+    data = {"query": "mutation($user: UserInput!) { createUser(user: $user) { user { id } token  } }",
+	"variables": {"user": {"displayName": displayname,"username": username,"password": password,"id": id,"email": email}}}
 
     stringify = json.dumps(data)
 
@@ -43,11 +44,37 @@ def add_user(user):
 
 
 
+"""
+Vendor{"id", "name", "category"}
+"""
+def add_vendor(vendor):
+    name = vendor["name"]
+    category = vendor["category"]
+
+    data = {"query": "mutation($vendor: VendorInput!) { addVendor(vendor: $vendor) { id name category }}",
+    "variables": {"vendor": {"name": name,"category": category}}}
+
+    stringify = json.dumps(data)
+
+    requests.post(url = "https://murmuring-lake-39323.herokuapp.com/graphql", data = stringify, headers={"content-Type": "application/json"})
 
 
-def get_transactions():
-    response = requests.get(url = "https://murmuring-lake-39323.herokuapp.com/graphql")
-    print(response.json())
+
+"""
+transaction{"student_id", "item_id", "vendor_id", quantity}
+"""
+def add_transaction(transaction):
+    student_id = str(transaction["student_id"])
+    item_id = str(transaction["item_id"])
+    vendor_id = str(transaction["vendor_id"])
+    qty = int(transaction["quantity"])
+
+    data = {"query": "mutation($transaction: TransactionInput!) { addTransaction(transaction: $transaction) { id studentID itemID vendorID qty timestamp } }",
+    "variables": {"transaction": {"studentID": student_id,"itemID": item_id,"vendorID": vendor_id,"qty": qty}}}
+
+    stringify = json.dumps(data)
+
+    requests.post(url = "https://murmuring-lake-39323.herokuapp.com/graphql", data = stringify, headers={"content-Type": "application/json"})
 
 
 
