@@ -1,36 +1,4 @@
-# cd ~\Users\Andre\OneDrive\Documents\GitHub\SDHacks-Python
-# FLASK_APP=mainsite.py FLASK_DEBUG=1 flask run
-
-from flask import Flask, render_template, request
-import requests
-import json
-import random
-
-
-#app = Flask(__name__)
-
-#def home_page():
-#    return render_template('home_page.html')
-
-
-
-gram_to_pound_conversion = .0022
-emmisions_factors = {"meatfisheggs": 1452,
-                    "cerealsbakeryproducts": 741,
-                    "dairy": 1911,
-                    "fruitsvegetables": 1176,
-                    "eatingout": 368,
-                    "otherfoods": 467,
-                    }
-
-#source http://www.carbonglobe.com/carbon-footprint-formula.php
-def calculate_CO2_emissions(dollars_spent, category, months):
-    CO2_emissions = (dollars_spent * emmisions_factors[category] * months) * gram_to_pound_conversion
-    return CO2_emissions
-
-def get_dollars_spent_by_category(category):
-    response = requests.get("INSERT URL HERE")
-    response
+import 
 
 
 users = []
