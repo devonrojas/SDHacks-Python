@@ -1,21 +1,33 @@
-import 
+import random
+from mainsite import *
+
 
 
 users = []
 def generate_users(amount):
     for i in range(amount):
-        user = {"id": i, "Username": f"username{i}", "email": f"email{i}", "password": f"password{i}"}
+        user = {"id": f"{i}", "displayname": f"displayname{i}", "username": f"username{i}", "email": f"email{i}", "password": f"password{i}"}
         users.append(user)
-    #print(users)
+
+generate_users(5)
+
+def addusers():
+    for user in users:
+        add_user(user)
+        print("Added: " + str(user))
+
+addusers()
+
+
 
 items = []
-dozen_eggs = {"id": 0, "name": "DozenEggs", "type": "meatfisheggs", "price": 3.99}
-ham = {"id": 1, "name": "Ham", "type": "meatfisheggs", "price": 5.99}
-bread = {"id": 2, "name": "WhiteBread", "type": "cerealsbakeryproducts", "price": 1.99}
-milk = {"id": 3, "name": "milk", "type": "dairy", "price": 3.00}
-apple = {"id": 4, "name": "Apple", "type": "fruitsvegetables", "price": 1.50}
-pizza = {"id": 5, "name": "DominosPizza", "type": "eatingout", "price": 12.99}
-sauce = {"id": 6, "name": "ChiliSauce", "type": "otherfoods", "price": 1.99}
+dozen_eggs = {"id": 0, "name": "DozenEggs", "category": "meatfisheggs", "price": 4}
+ham = {"id": 1, "name": "Ham", "category": "meatfisheggs", "price": 6}
+bread = {"id": 2, "name": "WhiteBread", "category": "cerealsbakeryproducts", "price": 1}
+milk = {"id": 3, "name": "milk", "category": "dairy", "price": 3}
+apple = {"id": 4, "name": "Apple", "category": "fruitsvegetables", "price": 2}
+pizza = {"id": 5, "name": "DominosPizza", "category": "eatingout", "price": 13}
+sauce = {"id": 6, "name": "ChiliSauce", "category": "otherfoods", "price": 2}
 items.append(dozen_eggs)
 items.append(ham)
 items.append(bread)
@@ -23,6 +35,15 @@ items.append(milk)
 items.append(apple)
 items.append(pizza)
 items.append(sauce)
+
+def additems():
+    for item in items:
+        add_item(item)
+        print("Added: " + str(item))
+
+#additems()
+
+
 
 vendors = []
 McDonalds = {"id": 1, "name": "Subway", "type": "FastFood"}
@@ -49,6 +70,3 @@ def generate_transactions(amount):
                         "timestamp": random_timestamp,
                         }
         transactions.append(transaction)
-    print(transactions)
-
-generate_transactions(5)
