@@ -6,7 +6,11 @@ import requests
 import json
 import random
 
+app = Flask(__name__)
 
+@app.route('/')
+def index():
+  return "<h1>Welcome to Carbon3 Python server</h1>"
 
 """
 Item{"id", "name", "category", "price"}
@@ -64,3 +68,7 @@ def calculate_CO2_emissions(dollars_spent, category, months):
                         "otherfoods": 467}
     CO2_emissions = (dollars_spent * emmisions_factors[category] * months) * gram_to_pound_conversion
     return CO2_emissions
+
+
+if __name__ == '__main__':
+  app.run(threaded=True, port=5000)
