@@ -15,11 +15,12 @@
     <link href="static/css/mdb.min.css" rel="stylesheet">
     <!-- Your custom styles (optional) -->
     <link href="static/css/style.css" rel="stylesheet">
-    <link href="static/css/table1_styles.css" rel="stylesheet">
+    <link href="static/css/vendor.css" rel="vendor stylesheet">
+    <link rel="stylesheet" href="static/css/bar_graphs.css">
 
     <!--<style> .md-form label {position: relative !important;s} </style>
     -->
-    <link href="static/css/vendor.css" rel="vendor stylesheet">
+   
 
 
   </head>
@@ -72,10 +73,17 @@
   <!-- Collapsible content -->
 </nav>
 <!--/.Navbar-->
-
+{% block content %}
+{% endblock %}
 </body>
+ <!-- JQuery -->
+ <!-- Jquery core JavaScript -->
+ <script src="static/js/jquery-3.4.1.min.js" type="text/javascript"></script>
+ <!-- MDB core JavaScript -->
+ <script src="static/js/popper.min.js" type="text/javascript"></script>
+ <!-- Bootstrap tooltips -->
+ <script src="static/js/bootstrap.min.js" type="text/javascript"></script>
+ <!-- MDB core JavaScript -->
+ <script src="static/js/mdb.js" type="text/javascript"></script>
 
-  <body>
-    {% block content %}
-    {% endblock %}
-  </body>
+</html>
