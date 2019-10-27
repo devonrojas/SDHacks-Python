@@ -36,6 +36,11 @@ def post_data():
     return jsonify(result)
 
 
+@app.route('/api', methods=['GET', 'POST'])
+def api():
+    return "hello from the api!"
+
+
 """
 Item{"id", "name", "category", "price"}
 """
