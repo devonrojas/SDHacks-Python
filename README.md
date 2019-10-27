@@ -1,13 +1,12 @@
-General Colors we are using:
-#BOE0D9   Powder Blue
-#5FAD56   Shiny Shamrock
-#5FD17E   Mellow Yellow
-#0BC9CD   Robin Egg Blue
-#49A078   Shiny Shamrock
+## General Colors we are using:
+<p> #BOE0D9   Powder Blue </p>
+<p> #5FAD56   Shiny Shamrock </p>
+<p> #5FD17E   Mellow Yellow </p>
+<p> #0BC9CD   Robin Egg Blue </p>
+<p> #49A078   Shiny Shamrock </p>
+
+<p> Buttons: class= "btn aqua-gradient" </p>
+<p> Navbar: class= "cyan accent-4" </p>
 
 
-Buttons: class= "btn aqua-gradient"
-Navbar: class= "cyan accent-4"
-
-
-Carbon^3 Logo Color: #49A078
+<p> Carbon^3 Logo Color: #49A078 </p>
