@@ -4,43 +4,184 @@
 
 {% block content %}
 
-<script src="static/js/fstdropdown.js"></script>
 <link rel="stylesheet" href="static/css/fstdropdown.css">
+<style>
+        .hidden {
+                display: none;
+        }
+</style>
 
+<div class="wrapper" style="max-width: 800px; margin: 0 auto;">
+        <h1 style="color:#49A078; font-weight: bold; font-family:Impact; font-size: 50; text-align:center;">
+                </br></br>Carbon&sup3;
+        </h1>
 
-<h1
-style="color:#49A078; font-weight: bold; font-family:Impact; font-size: 50; text-align:center;">
-</br></br>Carbon&sup3;
-</h1>
-
-<div class="form-group purple-border">
-    <label for="exampleFormControlTextarea4"><b>Student ID</b></label>
-    <textarea class="form-control" id="exampleFormControlTextarea4" rows="2"></textarea>
-</div> 
-
-<div>
-        <select class="fstdropdown-select" id="example">
-                <option value="">Add Item</option>
-                <option value="1">Coffee</option>
-                <option value="2">Tea</option>
-                <option value="3">Sandwich</option>
-          </select>
-          
-          <script>
-                  let select = document.getElementById("example");
-                  fstdropdown.rebind();
-                  setFstDropdown();
-        </script>
+        <form onsubmit="return false" id="vendorForm">
+                <div class="row">
+                        <div class="col">
+                                <div class="form-group purple-border">
+                                        <label for="studentBarcode">Student ID</label>
+                                        <input type="text" class="form-control" id="studentBarcode"
+                                                placeholder="Please scan a student ID">
+                                </div>
+                        </div>
+                </div>
+                <div class="row">
+                        <div class="col">
+                                <div class="form-group purple-border">
+                                        <label for="itemBarcode">Scan an item</label>
+                                        <input type="text" class="form-control" id="itemBarcode"
+                                                placeholder="0000000000000000">
+                                </div>
+                                <div style="margin-top: 3rem">
+                                        <h2>Total: $<span id="total">0.00</span></h2>
+                                </div>
+                        </div>
+                        <div class="col">
+                                <div class="form-group purple-border" id="itemList">
+                                        <label for="items">Items</label>
+                                </div>
+                        </div>
+                </div>
+                <div class="row" style="text-align: center; margin: 2rem 0">
+                        <button type="button" class="btn aqua-gradient btn-lg btn-block" id="submitBtn">Check
+                                Out</button>
+                </div>
+        </form>
 </div>
 
-<br></br>
-<br> </br>
-<div style="text-align: center;">
-<button type ="checkout button" class="btn aqua-gradient btn-lg btn-block">Check Out</button>
-</div>
+<script>
+        const API = "https://murmuring-lake-39323.herokuapp.com/graphql";
+        const VENDOR_ID = "5db5445b7f6c5700179ba3cc";
+
+        let total$ = document.getElementById("total$");
+        let form = document.getElementById("vendorForm");
+        let submitBtn = document.getElementById("submitBtn");
+        let studentIDinput = document.getElementById("studentBarcode");
+        let itemBarcodeInput = document.getElementById("itemBarcode");
+        let items = {};
+
+        const init = async () => {
+                try {
+
+                        studentIDinput.addEventListener("keyup", (e) => {
+                                if (e.keyCode === 13) {
+                                        e.preventDefault();
+                                        itemBarcodeInput.focus();
+                                }
+                        })
+
+                        itemBarcodeInput.addEventListener("keyup", async (e) => {
+                                if (e.keyCode === 13) {
+                                        e.preventDefault();
+                                        await addItem(e.target.value);
+                                        e.target.value = "";
+                                        e.target.focus();
+                                }
+                        })
+
+                        submitBtn.addEventListener("click", async (e) => {
+                                e.preventDefault();
+                                await sendData();
+                        })
+
+
+                } catch (err) {
+                        alert(err.message);
+                }
+        }
+
+        const addItem = async (id) => {
+                let itemEl = document.getElementById(id);
+                if (itemEl) {
+                        itemEl.value++;
+                        items[id]['qty']++;
+                } else {
+                        let response = await fetch(API, {
+                                method: 'POST',
+                                headers: {
+                                        "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                        "query": "query($id: String!) { item(id: $id) { id description price } }",
+                                        "variables": { "id": id.toString() }
+                                })
+                        });
+                        let res = await response.json();
+                        if (res.data.item) {
+                                let item = res.data.item;
+                                let div = document.createElement("div");
+                                div.style = "display: flex; flex-direction: row";
+
+                                let p = document.createElement("p");
+                                p.innerHTML = item.description + "<br>(" + item.id + ")";
+                                p.style = "flex: 1; margin-right: 0.5rem";
+
+                                let input = document.createElement("input");
+                                input.type = "number";
+                                input.value = 1;
+                                input.id = item.id;
+                                input.classList.add("form-control");
+                                input.style = "max-width: 80px";
+                                input.placeholder = "Qty";
+
+                                div.append(p);
+                                div.append(input);
+                                document.getElementById("itemList").append(div);
+
+                                items[id] = {};
+                                items[id]['qty'] = 1;
+                                items[id]['price'] = item.price;
+                        } else {
+                                alert("No item found under " + id);
+                        }
+                }
+
+                // calculate totals
+                let tempTotal = 0;
+                for (let id in items) {
+                        tempTotal += items[id]['price'] * items[id]['qty'];
+                }
+                document.getElementById("total").innerHTML = parseFloat(tempTotal).toFixed(2);
+
+        }
+
+        const sendData = async () => {
+                if (Object.keys(items).length !== 0) {
+                        let i = Object.keys(items).map(key => {
+                                return {
+                                        id: key,
+                                        qty: items[key]['qty']
+                                }
+                        })
+                        let transaction = {
+                                studentID: studentIDinput.value,
+                                vendorID: VENDOR_ID,
+                                items: i
+                        }
+                        let res = await fetch(API, {
+                                method: "POST",
+                                headers: {
+                                        "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                        "query": "mutation($transaction: TransactionInput!) { addTransaction(transaction: $transaction) { id timestamp } }",
+                                        "variables": {
+                                                "transaction": transaction
+                                        }
+                                })
+                        })
+                        let trx = await res.json();
+                        alert("Transaction processed at " + new Date(+trx.data.addTransaction.timestamp).toString());
+                        document.getElementById("itemList").innerHTML = "";
+                        let label = document.createElement("label");
+                        label.innerHTML = "Items";
+                        label.for = "items";
+                        document.getElementById("itemList").append(label);
+                        document.getElementById("total").innerHTML = "0.00";
+                }
+        }
+        window.addEventListener('load', init, false);
+</script>
 
 {% endblock %}
-
-
-
-    
