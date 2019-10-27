@@ -1,81 +1,82 @@
 <!DOCTYPE html>
 
-  <head>
-    <link rel="stylesheet" type = "text/css" href="{{ url_for('static', filename= 'css/home_page_styles.css')}}">
-  </head>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-    <!-- Bootstrap core CSS -->
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Material Design Bootstrap -->
-    <link href="static/css/mdb.min.css" rel="stylesheet">
-    <!-- Your custom styles (optional) -->
-    <link href="static/css/style.css" rel="stylesheet">
-    <link href="static/css/table1_styles.css" rel="stylesheet">
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename= 'css/home_page_styles.css')}}">
+</head>
 
-    <!--<style> .md-form label {position: relative !important;s} </style>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="static/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="static/css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="static/css/style.css" rel="stylesheet">
+  <link href="static/css/table1_styles.css" rel="stylesheet">
+
+  <!--<style> .md-form label {position: relative !important;s} </style>
     -->
-    <link href="static/css/vendor.css" rel="vendor stylesheet">
+  <link href="static/css/vendor.css" rel="vendor stylesheet">
 
 
-  </head>
-  <body>
+</head>
+
+<body>
 
   <!-- UC San Diego Logo upper left corner -->
-  <img
-    src="https://libraries.ucsd.edu/chronopolis/join-us/ucsandiegologo-bluegold.png"
-    width="200" height= "50" vertical-align="top"/>
-    
-  
-<!--Navbar-->
-<nav class="navbar navbar-expand-lg navbar-dark cyan accent-4">
+  <img src="https://libraries.ucsd.edu/chronopolis/join-us/ucsandiegologo-bluegold.png" width="200" height="50"
+    vertical-align="top" />
 
-  <!-- Navbar brand -->
-  <a class="navbar-brand" href="#"></a>
 
-  <!-- Collapse button -->
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
-    aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <!--Navbar-->
+  <nav class="navbar navbar-expand-lg navbar-dark cyan accent-4">
 
-  <!-- Collapsible content -->
-  <div class="collapse navbar-collapse" id="basicExampleNav">
+    <!-- Navbar brand -->
+    <a class="navbar-brand" href="#"></a>
 
-    <!-- Links -->
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home
-          <span class="sr-only">(current)</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="http://localhost:5000/admin">Admin View</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="http://localhost:5000/vendor">Vendor View</a>
-      </li>
+    <!-- Collapse button -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+      aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    </ul>
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="basicExampleNav">
 
-    <!-- Links -->
-    <form class="form-inline">
-      <div class="md-form my-0">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-      </div>
-    </form>
-  </div>
-  <!-- Collapsible content -->
-</nav>
-<!--/.Navbar-->
+      <!-- Links -->
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:5000/admin">Admin View</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://localhost:5000/vendor">Vendor View</a>
+        </li>
+
+      </ul>
+
+      <!-- Links -->
+      <form class="form-inline">
+        <div class="md-form my-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        </div>
+      </form>
+    </div>
+    <!-- Collapsible content -->
+  </nav>
+  <!--/.Navbar-->
 
 </body>
 
-  <body>
-    {% block content %}
-    {% endblock %}
-  </body>
+<body>
+  {% block content %}
+  {% endblock %}
+</body>

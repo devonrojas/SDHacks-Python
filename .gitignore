@@ -1,4 +1,1 @@
-/bin
-/__pycache__
-/include
-/lib
+venv/
