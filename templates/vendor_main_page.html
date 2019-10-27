@@ -52,7 +52,7 @@
 
 <script>
         const API = "https://murmuring-lake-39323.herokuapp.com/graphql";
-        const VENDOR_ID = "ucsdBookstore";
+        const VENDOR_ID = "5db5445b7f6c5700179ba3cc";
 
         let total$ = document.getElementById("total$");
         let form = document.getElementById("vendorForm");
@@ -97,7 +97,6 @@
                         itemEl.value++;
                         items[id]['qty']++;
                 } else {
-                        console.log("here", id);
                         let response = await fetch(API, {
                                 method: 'POST',
                                 headers: {
@@ -133,6 +132,8 @@
                                 items[id] = {};
                                 items[id]['qty'] = 1;
                                 items[id]['price'] = item.price;
+                        } else {
+                                alert("No item found under " + id);
                         }
                 }
 
@@ -147,29 +148,37 @@
 
         const sendData = async () => {
                 if (Object.keys(items).length !== 0) {
-                        let transactions = Object.keys(items).map(key => {
-                                let transaction = {
-                                        studentID: studentIDinput.value,
-                                        itemID: key,
-                                        vendorID: VENDOR_ID,
+                        let i = Object.keys(items).map(key => {
+                                return {
+                                        id: key,
                                         qty: items[key]['qty']
                                 }
-                                return transaction;
                         })
+                        let transaction = {
+                                studentID: studentIDinput.value,
+                                vendorID: VENDOR_ID,
+                                items: i
+                        }
                         let res = await fetch(API, {
                                 method: "POST",
                                 headers: {
                                         "Content-Type": "application/json"
                                 },
                                 body: JSON.stringify({
-                                        "query": "mutation($transactions: [TransactionInput!]) { addTransactions(transactions: $transactions) { id timestamp } }",
+                                        "query": "mutation($transaction: TransactionInput!) { addTransaction(transaction: $transaction) { id timestamp } }",
                                         "variables": {
-                                                "transactions": transactions
+                                                "transaction": transaction
                                         }
                                 })
                         })
                         let trx = await res.json();
-                        alert("Transaction processed at " + new Date(+trx.data.addTransactions[0].timestamp).toString());
+                        alert("Transaction processed at " + new Date(+trx.data.addTransaction.timestamp).toString());
+                        document.getElementById("itemList").innerHTML = "";
+                        let label = document.createElement("label");
+                        label.innerHTML = "Items";
+                        label.for = "items";
+                        document.getElementById("itemList").append(label);
+                        document.getElementById("total").innerHTML = "0.00";
                 }
         }
         window.addEventListener('load', init, false);
