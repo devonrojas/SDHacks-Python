@@ -4,14 +4,43 @@
 
 {% block content %}
 
+<script src="static/js/fstdropdown.js"></script>
+<link rel="stylesheet" href="static/css/fstdropdown.css">
+
+
 <h1
 style="color:#49A078; font-weight: bold; font-family:Impact; font-size: 50; text-align:center;">
 </br></br>Carbon&sup3;
 </h1>
 
 <div class="form-group purple-border">
-    <label for="exampleFormControlTextarea4">Student ID</label>
-    <textarea class="form-control" id="exampleFormControlTextarea4" rows="3"></textarea>
-  </div>
+    <label for="exampleFormControlTextarea4"><b>Student ID</b></label>
+    <textarea class="form-control" id="exampleFormControlTextarea4" rows="2"></textarea>
+</div> 
+
+<div>
+        <select class="fstdropdown-select" id="example">
+                <option value="">Add Item</option>
+                <option value="1">Coffee</option>
+                <option value="2">Tea</option>
+                <option value="3">Sandwich</option>
+          </select>
+          
+          <script>
+                  let select = document.getElementById("example");
+                  fstdropdown.rebind();
+                  setFstDropdown();
+        </script>
+</div>
+
+<br></br>
+<br> </br>
+<div style="text-align: center;">
+<button type ="checkout button" class="btn aqua-gradient btn-lg btn-block">Check Out</button>
+</div>
 
 {% endblock %}
+
+
+
+    

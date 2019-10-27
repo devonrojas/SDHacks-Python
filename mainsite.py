@@ -8,7 +8,7 @@ app = Flask(__name__)
 import requests
 import json
 import random
-
+from datetime import datetime
 
 #Home Page
 @app.route('/')
@@ -25,74 +25,178 @@ def vendor_page():
     return render_template('vendor_main_page.html')
 
 
+"""
+Item{"id", "name", "category", "price"}
+"""
+def add_item(item):
+    description = item["name"]
+    category = item["category"]
+    price = item["price"]
 
-gram_to_pound_conversion = .0022
-emmisions_factors = {"meatfisheggs": 1452,
-                    "cerealsbakeryproducts": 741,
-                    "dairy": 1911,
-                    "fruitsvegetables": 1176,
-                    "eatingout": 368,
-                    "otherfoods": 467,
-                    }
+    data = {"query": "mutation($item: ItemInput!) { addItem(item: $item) { id description category price } }",
+    "variables": {"item": {"description": description, "category": category, "price": price}}}
+    stringify = json.dumps(data)
 
-#source http://www.carbonglobe.com/carbon-footprint-formula.php
-def calculate_CO2_emissions(dollars_spent, category, months):
-    CO2_emissions = (dollars_spent * emmisions_factors[category] * months) * gram_to_pound_conversion
+    requests.post(url = "https://murmuring-lake-39323.herokuapp.com/graphql", data = stringify, headers={"content-Type": "application/json"})
+
+
+
+"""
+User{"id", "displayname", "username", "email", "password"}
+"""
+def add_user(user):
+    id = user["id"]
+    displayname = user["displayname"]
+    username = user["username"]
+    email = user["email"]
+    password = user["password"]
+
+    data = {"query": "mutation($user: UserInput!) { createUser(user: $user) { user { id } token  } }",
+	"variables": {"user": {"displayName": displayname,"username": username,"password": password,"id": id,"email": email}}}
+
+    stringify = json.dumps(data)
+
+    requests.post(url = "https://murmuring-lake-39323.herokuapp.com/graphql", data = stringify, headers={"content-Type": "application/json"})
+
+
+
+"""
+Vendor{"id", "name", "category"}
+"""
+def add_vendor(vendor):
+    name = vendor["name"]
+    category = vendor["category"]
+
+    data = {"query": "mutation($vendor: VendorInput!) { addVendor(vendor: $vendor) { id name category }}",
+    "variables": {"vendor": {"name": name,"category": category}}}
+
+    stringify = json.dumps(data)
+
+    requests.post(url = "https://murmuring-lake-39323.herokuapp.com/graphql", data = stringify, headers={"content-Type": "application/json"})
+
+
+
+"""
+transaction{"student_id", "item_id", "vendor_id", quantity}
+"""
+def add_transaction(transaction):
+    student_id = str(transaction["student_id"])
+    item_id = str(transaction["item_id"])
+    vendor_id = str(transaction["vendor_id"])
+    qty = int(transaction["quantity"])
+
+    data = {"query": "mutation($transaction: TransactionInput!) { addTransaction(transaction: $transaction) { id studentID itemID vendorID qty timestamp } }",
+    "variables": {"transaction": {"studentID": student_id,"itemID": item_id,"vendorID": vendor_id,"qty": qty}}}
+
+    stringify = json.dumps(data)
+
+    requests.post(url = "https://murmuring-lake-39323.herokuapp.com/graphql", data = stringify, headers={"content-Type": "application/json"})
+
+
+
+def get_all_item_ids():
+    data = {"query": "query($ids: [String]) { items(ids: $ids) { id description category price } }"}
+
+    stringify = json.dumps(data)
+
+    response = requests.post(url = "https://murmuring-lake-39323.herokuapp.com/graphql", data = stringify, headers={"content-Type": "application/json"})
+
+    items = response.json()['data']["items"]
+
+    item_ids = []
+    for item in items:
+        item_ids.append(item['id'])
+
+    return item_ids
+
+
+def get_item_ids_by_type(type):
+    data = {"query": "query($ids: [String]) { items(ids: $ids) { id description category price } }"}
+
+    stringify = json.dumps(data)
+
+    response = requests.post(url = "https://murmuring-lake-39323.herokuapp.com/graphql", data = stringify, headers={"content-Type": "application/json"})
+
+    items = response.json()['data']["items"]
+
+    item_ids = []
+    for item in items:
+        if item['category'] == type:
+            item_ids.append(item['id'])
+    return item_ids
+
+
+
+def get_item_by_ID(ID):
+    data = {"query": "query($ids: [String]) { items(ids: $ids) { id description category price } }"}
+
+    stringify = json.dumps(data)
+
+    response = requests.post(url = "https://murmuring-lake-39323.herokuapp.com/graphql", data = stringify, headers={"content-Type": "application/json"})
+
+    items = response.json()['data']["items"]
+
+
+    for item in items:
+        if item['id'] == ID:
+            return item
+
+
+
+def get_transactions_by_type(type):
+    data = {"query": "query($ids: [String!]) { transactions(ids: $ids) { id studentID itemID vendorID qty timestamp } }"}
+    stringify = json.dumps(data)
+
+    response = requests.post(url = "https://murmuring-lake-39323.herokuapp.com/graphql", data = stringify, headers={"content-Type": "application/json"})
+
+    transactions = response.json()['data']['transactions']
+    ids = get_item_ids_by_type(type)
+    item_count = {}
+    for transaction in transactions:
+        if transaction['itemID'] in ids:
+            if transaction['itemID'] in item_count:
+                item_count[transaction['itemID']] += transaction['qty']
+            else:
+                item_count[transaction['itemID']] = transaction['qty']
+
+    return item_count
+
+#print(get_transactions_by_type("eatingout"))
+
+
+def get_total_spent_by_type(type):
+    items = get_transactions_by_type(type)
+    total_cost = 0
+    for item in items.keys():
+        item_cost = get_item_by_ID(item)['price']
+        total_cost = item_cost * items[item]
+
+    return total_cost
+
+#print(get_total_spent_by_type("eatingout"))
+
+def calculate_CO2_emissions(dollars_spent, category):
+    #source http://www.carbonglobe.com/carbon-footprint-formula.php
+    gram_to_pound_conversion = .0022
+    emmisions_factors = {"meatfisheggs": 1452,
+                        "cerealsbakeryproducts": 741,
+                        "dairy": 1911,
+                        "fruitsvegetables": 1176,
+                        "eatingout": 368,
+                        "otherfoods": 467}
+    CO2_emissions = (dollars_spent * emmisions_factors[category]) * gram_to_pound_conversion
     return CO2_emissions
 
-def get_dollars_spent_by_category(category):
-    response = requests.get("INSERT URL HERE")
-    response
 
+def calculate_CO2_emissions_by_type():
+    categories = ["meatfisheggs", "cerealsbakeryproducts", "dairy", "fruitsvegetables", "eatingout", "otherfoods"]
 
-users = []
-def generate_users(amount):
-    for i in range(amount):
-        user = {"id": i, "Username": f"username{i}", "email": f"email{i}", "password": f"password{i}"}
-        users.append(user)
-    #print(users)
+    info = {}
 
-items = []
-dozen_eggs = {"id": 0, "name": "DozenEggs", "type": "meatfisheggs", "price": 3.99}
-ham = {"id": 1, "name": "Ham", "type": "meatfisheggs", "price": 5.99}
-bread = {"id": 2, "name": "WhiteBread", "type": "cerealsbakeryproducts", "price": 1.99}
-milk = {"id": 3, "name": "milk", "type": "dairy", "price": 3.00}
-apple = {"id": 4, "name": "Apple", "type": "fruitsvegetables", "price": 1.50}
-pizza = {"id": 5, "name": "DominosPizza", "type": "eatingout", "price": 12.99}
-sauce = {"id": 6, "name": "ChiliSauce", "type": "otherfoods", "price": 1.99}
-items.append(dozen_eggs)
-items.append(ham)
-items.append(bread)
-items.append(milk)
-items.append(apple)
-items.append(pizza)
-items.append(sauce)
+    for category in categories:
+        spent = int(get_total_spent_by_type(category))
+        info[category] = calculate_CO2_emissions(spent, category)
 
-vendors = []
-McDonalds = {"id": 1, "name": "Subway", "type": "FastFood"}
-Vons = {"id": 2, "name": "Vons", "type": "GrocceryStore"}
-vendors.append(McDonalds)
-vendors.append(Vons)
+    return info
 
-
-
-transactions = []
-def generate_transactions(amount):
-    generate_users(amount)
-    for i in range(amount):
-        random_user_id = random.choice(users)["id"]
-        random_item_id = random.choice(items)["id"]
-        random_quantity = random.randint(1,9)
-        random_vendor = random.choice(vendors)
-        random_timestamp = random.randint(1,3)
-        transaction = {"transaction_id": i,
-                        "user_id": random_user_id,
-                        "item_id": random_item_id,
-                        "quantity": random_quantity,
-                        "vendor_id": random_vendor,
-                        "timestamp": random_timestamp,
-                        }
-        transactions.append(transaction)
-    print(transactions)
-
-generate_transactions(5)
+print(calculate_CO2_emissions_by_type())
