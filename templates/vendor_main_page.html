@@ -172,7 +172,8 @@
                                 })
                         })
                         let trx = await res.json();
-                        alert("Transaction processed at " + new Date(+trx.data.addTransaction.timestamp).toString());
+                        console.log(trx);
+                        // alert("Transaction processed at " + new Date(+trx.data.addTransaction.timestamp).toString());
                         document.getElementById("itemList").innerHTML = "";
                         let label = document.createElement("label");
                         label.innerHTML = "Items";
