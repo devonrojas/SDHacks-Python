@@ -5,8 +5,7 @@
 <p> #0BC9CD   Robin Egg Blue </p>
 <p> #49A078   Shiny Shamrock </p>
 
-<p> Buttons: class= "btn aqua-gradient" </p>
-<p> Navbar: class= "cyan accent-4" </p>
-
-
-<p> Carbon<sup>3</sup> Logo Color: #49A078 </p>
+<br></br>
+<p><b> Buttons: class= "btn aqua-gradient" </b></p>
+<p><b> Navbar: class= "cyan accent-4" </b></p>
+<p><b> Carbon<sup>3</sup> Logo Color: #49A078 </b></p>
