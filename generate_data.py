@@ -3,6 +3,9 @@ from mainsite import *
 
 
 
+
+
+
 users = []
 def generate_users(amount):
     for i in range(amount):
@@ -60,13 +63,13 @@ def addvendors():
 
 #addvendors()
 
-
+item_ids = get_all_item_ids()
 transactions = []
 def generate_transactions(amount):
     generate_users(amount)
     for i in range(amount):
         random_user_id = str(random.choice(users)["id"])
-        random_item_id = str(random.choice(items)["id"])
+        random_item_id = str(random.choice(item_ids))
         random_quantity = random.randint(1,9)
         random_vendor = str(random.choice(vendors)["id"])
 
@@ -77,7 +80,7 @@ def generate_transactions(amount):
                         }
         transactions.append(transaction)
 
-generate_transactions(3)
+generate_transactions(10)
 
 def addtransactions():
     for trans in transactions:
