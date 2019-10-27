@@ -36,7 +36,7 @@ def post_data():
     return jsonify(result)
 
 
-@app.route('/api/calculateC02', methods=['POST'])
+@app.route('/api/calculateCO2', methods=['POST'])
 def api():
     req_data = request.get_json()
     categories = req_data["categories"]
