@@ -6,7 +6,15 @@ import requests
 import json
 import random
 from datetime import datetime
+import jsonify
 
+
+@app.route('/get_data', methods = ['POST'])
+def post_data():
+    user_data = request.get_json() #
+    # add here the code to create the user
+    result = calculate_CO2_emissions_by_type()
+    return jsonify(result)
 
 
 """
