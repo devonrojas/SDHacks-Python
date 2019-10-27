@@ -9,4 +9,4 @@
 <p> Navbar: class= "cyan accent-4" </p>
 
 
-<p> Carbon^3 Logo Color: #49A078 </p>
+<p> Carbon<sup>3</sup> Logo Color: #49A078 </p>
