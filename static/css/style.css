@@ -1,4 +1,5 @@
 html,body {
+<<<<<<< HEAD
   margin: 0;
   padding: 0;
 }
@@ -6,3 +7,12 @@ html,body {
 * {
   box-sizing: border-box;
 }
+=======
+    margin: 0;
+    padding: 0;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+>>>>>>> 1567aa59915ce224be6951e4832d023702774fe8
