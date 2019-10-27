@@ -36,9 +36,27 @@ def post_data():
     return jsonify(result)
 
 
-@app.route('/api', methods=['GET', 'POST'])
+@app.route('/api/calculateC02', methods=['POST'])
 def api():
-    return "hello from the api!"
+    req_data = request.get_json()
+    categories = req_data["categories"]
+    print(categories)
+
+    res = {"totalDollarsSpent": 0, "totalCO2Emissions": 0, "breakdown": []}
+
+    for category in categories:
+        for key, value in category.items():
+            emissions = calculate_CO2_emissions(value["dollarsSpent"], key)
+            res["totalCO2Emissions"] += emissions
+            res["totalDollarsSpent"] += value["dollarsSpent"]
+            res["breakdown"].append({
+                key: {
+                    "dollarsSpent": value["dollarsSpent"],
+                    "CO2Emissions": emissions
+                }
+            })
+
+    return res
 
 
 """
@@ -274,7 +292,8 @@ def calculate_CO2_emissions(dollars_spent, category):
         "dairy": 1911,
         "fruitsvegetables": 1176,
         "eatingout": 368,
-        "otherfoods": 467
+        "otherfoods": 467,
+        "misc": 467
     }
     CO2_emissions = (dollars_spent *
                      emmisions_factors[category]) * gram_to_pound_conversion
